@@ -3,6 +3,7 @@ import ejs from "ejs";
 import Path from "path";
 
 const files = fs.readdirSync('./html', { recursive: true });
+console.log(files);
 const template = fs.readFileSync('./template.ejs', 'utf-8');
 
 let ends = 0;
