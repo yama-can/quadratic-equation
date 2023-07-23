@@ -1,0 +1,46 @@
+<title>解を求める | 2次方程式ツール</title>
+
+<script src="/solution/main.js"></script>
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML.js"></script>
+<script>
+	MathJax.Hub.Config({
+		tex2jax: {
+			inlineMath: [
+				[
+					'$',
+					'$'
+				]
+			]
+		}
+	});
+</script>
+
+<div class="inputs">
+	<h1>2次方程式の解の答えを求めます。</h1>
+	<input type="number" id="a" inputmode="numeric" placeholder="a" />
+	<math xmlns="http://www.w3.org/1998/Math/MathML">
+		<msup>
+			<mi>x</mi>
+			<mn>2</mn>
+		</msup>
+		<mo>+</mo>
+	</math>
+	<input type="number" id="b" inputmode="numeric" placeholder="b" />
+	<math xmlns="http://www.w3.org/1998/Math/MathML">
+		<mi>x</mi>
+		<mo>+</mo>
+	</math>
+	<input type="number" id="c" inputmode="numeric" placeholder="c" />
+	<math xmlns="http://www.w3.org/1998/Math/MathML">
+		<mo>=</mo>
+	</math>
+	<input type="number" id="d" inputmode="numeric" placeholder="d" value="0" disabled />
+	&nbsp;
+	<button class="solve">Solve</button>
+	<br>
+	<br>
+	<p id="ans">
+
+	</p>
+</div>

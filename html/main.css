@@ -1,0 +1,50 @@
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+input[type="number"] {
+	-moz-appearance: textfield;
+	appearance: textfield;
+}
+
+input,
+button {
+	border: 2px cyan solid;
+	border-radius: 3px;
+	outline: none;
+	background-color: white;
+	color: black;
+}
+
+input[type="number"] {
+	width: 3em;
+	text-align: right;
+}
+
+input[type="number"]:disabled {
+	background-color: darkgray;
+}
+
+input[type="number"]:focus {
+	border: 3px darkcyan solid;
+}
+
+.inputs {
+	text-align: center;
+}
+
+.inputs,
+.inputs * {
+	font-size: 20pt;
+}
+
+#ans.show {
+	background-color: cyan;
+	min-width: min(300px, 95vw);
+	max-width: 95vw;
+	border-radius: 10px;
+	width: 60vw;
+	display: inline-block;
+}
