@@ -1,4 +1,4 @@
-window.MathJax = {
+(window as any)["MathJax"] = {
 	chtml: {
 		matchFontHeight: false
 	},
@@ -11,21 +11,21 @@ window.MathJax = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-	const a = document.querySelector('div.inputs #a');
-	const b = document.querySelector('div.inputs #b');
-	const c = document.querySelector('div.inputs #c');
-	const d = document.querySelector('div.inputs #d');
+	const a = document.querySelector('div.inputs #a') as HTMLInputElement;
+	const b = document.querySelector('div.inputs #b') as HTMLInputElement;
+	const c = document.querySelector('div.inputs #c') as HTMLInputElement;
+	const d = document.querySelector('div.inputs #d') as HTMLInputElement;
 
 	document.addEventListener('keydown', (ev) => {
 		if (document.querySelectorAll('.inputs input:focus').length != 0) {
 			if (ev.key == "Enter") {
-				document.querySelector('button.solve').click();
+				(document.querySelector('button.solve') as HTMLButtonElement).click();
 			}
 		}
-	})
+	});
 
-	document.querySelector('button.solve').addEventListener('click', async () => {
-		if (d.value == 0) {
+	(document.querySelector('button.solve') as HTMLButtonElement).addEventListener('click', async () => {
+		if (Number(d.value) == 0) {
 			alert("実行中");
 			const as = prime_factorization(Number(a.value));
 			const cs = prime_factorization(Number(c.value));
@@ -33,10 +33,10 @@ document.addEventListener('DOMContentLoaded', () => {
 			for (let i = 0; i < (1 << as.length); i++) {
 				for (let j = 0; j < (1 << cs.length); j++) {
 					let ap = timeAll(bit(as.length, i).map((value) => as[value]));
-					let cp = a.value / ap;
+					let cp = Number(a.value) / ap;
 					let bp = timeAll(bit(cs.length, j).map((value) => cs[value]));
-					let dp = c.value / bp;
-					if (bp * cp + ap * dp == b.value) {
+					let dp = Number(c.value) / bp;
+					if (bp * cp + ap * dp == Number(b.value)) {
 						console.log(ap, cp, bp, dp);
 						// 変形先1
 						// (ax + b)(cx + d) = acx^2 + (ad + bc)x + bd
@@ -51,29 +51,29 @@ document.addEventListener('DOMContentLoaded', () => {
 							to2 = `${delete1(ap)}x+${bp}`;
 							ans = `${mathJaxDivison(-bp, ap)}`;
 						}
-						document.querySelector('#ans').innerHTML = `$${ans}$<br>
+						document.querySelector('#ans')!!.innerHTML = `$${ans}$<br>
 						この問題は二次方程式を
 						$${to1}=0$
 						の式に変形します。
 						$${to2}$が$0$になるときが解なので、解は$${ans}$です。`
-						document.querySelector('#ans').classList.add('show');
-						MathJax.Hub.Typeset();
+						document.querySelector('#ans')!!.classList.add('show');
+						(window as any).MathJax.Hub.Typeset();
 						return;
 					}
 				}
 			}
 		}
-		let as = a.value;
-		let bs = b.value;
-		let cs = c.value;
-		document.querySelector('#ans').innerHTML = `この問題の解は解の公式を使用し、
+		let as = Number(a.value);
+		let bs = Number(b.value);
+		let cs = Number(c.value);
+		document.querySelector('#ans')!!.innerHTML = `この問題の解は解の公式を使用し、
 		$$x=\\frac {${-bs}\\pm\\sqrt{${mathJaxStr.minus(bs * bs, 4 * as * cs)}}}{${2 * as}}$$と求められる。`
-		document.querySelector('#ans').classList.add('show');
-		MathJax.Hub.Typeset();
+		document.querySelector('#ans')!!.classList.add('show');
+		(window as any).MathJax.Hub.Typeset();
 	})
 })
 
-function bit(n, b) {
+function bit(n: number, b: number) {
 	let vec = [];
 	for (let i = 0; i < n; i++) {
 		if (b & (1 << i)) {
@@ -83,7 +83,7 @@ function bit(n, b) {
 	return vec;
 }
 
-function timeAll(vec) {
+function timeAll(vec: number[]) {
 	let time = 1;
 	for (let i = 0; i < vec.length; i++) {
 		time *= vec[i];
@@ -91,16 +91,16 @@ function timeAll(vec) {
 	return time;
 }
 
-function isPrime(value) {
+function isPrime(value: number) {
 	for (let i = 2; i * i <= value; i++) {
 		if (value % i == 0) return false;
 	}
 	return true;
 }
 
-function prime_factorization(value) {
+function prime_factorization(value: number) {
 	if (isPrime(value)) return [value];
-	let vec = [];
+	let vec: number[] = [];
 	while (!isPrime(value)) {
 		for (let i = 2; i < value; i++) {
 			if (isPrime(i)) {
@@ -114,13 +114,13 @@ function prime_factorization(value) {
 	return vec;
 }
 
-function delete1(num) {
+function delete1(num: number) {
 	if (num == 1) return "";
 	if (num == -1) return "-";
 	return num;
 }
 
-function mathJaxDivison(a, b) {
+function mathJaxDivison(a: number, b: number) {
 	if (a % b == 0) {
 		return a / b;
 	}
@@ -139,7 +139,7 @@ function mathJaxDivison(a, b) {
 }
 
 const mathJaxStr = {
-	plus: (a, b) => {
+	plus: (a: number | string, b: number | string) => {
 		if (typeof a == "number") {
 			a = a.toString();
 		}
@@ -151,7 +151,7 @@ const mathJaxStr = {
 		}
 		return a + "+" + b;
 	},
-	minus: (a, b) => {
+	minus: (a: number | string, b: number | string) => {
 		return mathJaxStr.plus(a, -b);
 	}
 }

@@ -1,6 +1,7 @@
 import fs from "fs";
 import ejs from "ejs";
 import Path from "path";
+import child_process from "child_process";
 
 let files = fs.readdirSync('./html');
 const template = fs.readFileSync('./template.ejs', 'utf-8');
@@ -18,7 +19,9 @@ const template = fs.readFileSync('./template.ejs', 'utf-8');
 		if (stat.isFile()) {
 			fs.mkdirSync(Path.join('./public', path, '../'), { recursive: true });
 
-			if (path.endsWith('.html')) {
+			if (path.endsWith('.ts')) {
+				continue;
+			} else if (path.endsWith('.html')) {
 				let body = fs.readFileSync(Path.join('./html', path), 'utf-8');
 				let title = body.match(/<title>(.*)<\/title>/)?.at(1);
 				if (!title) title = "2次方程式ツール";
@@ -39,5 +42,6 @@ const template = fs.readFileSync('./template.ejs', 'utf-8');
 		}
 	}
 })().then(() => {
+	child_process.execSync("tsc");
 	process.exit();
 })

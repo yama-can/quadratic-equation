@@ -1,3 +1,3 @@
-/dist
-/public
+/server/dist
+/web/public
 /node_modules

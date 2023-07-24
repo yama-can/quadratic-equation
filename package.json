@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cd ./server && tsc && cd ../web && node ../server/dist/test",
+    "start": "cd web && npm i && cd ../server && npm i && cd ../web && node ../server/dist"
   },
   "author": "",
   "license": "ISC",
