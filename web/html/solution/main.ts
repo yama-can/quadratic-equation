@@ -62,14 +62,37 @@ document.addEventListener('DOMContentLoaded', () => {
 					}
 				}
 			}
+
+			// 存在しなかったとき
+			{
+				let as = Number(a.value);
+				let bs = Number(b.value);
+				let cs = Number(c.value);
+				document.querySelector('#ans')!!.innerHTML = `この問題の解は解の公式を使用し、
+				$$x= \\frac {-b\\pm\\sqrt{b^{2}+4ac}}{2a}=\\frac {${-bs}\\pm\\sqrt{${mathJaxStr.minus(bs * bs, 4)}\\times${as}\\times${cs}}}{${2 * as}}$$
+				と求められる。`
+				document.querySelector('#ans')!!.classList.add('show');
+				(window as any).MathJax.Hub.Typeset();
+			}
+		} else {
+			{
+				let as = Number(a.value);
+				let bs = Number(b.value);
+				let cs = Number(c.value);
+				let ds = Number(d.value);
+				document.querySelector('#ans')!!.innerHTML = `$$ax^2+bx+c=d \\Rightarrow ax^2+bx+(c-d)=0$$
+				解の公式を使用し、<br>
+				$x= \\frac {-b\\pm\\sqrt{b^{2}+4a(c-d)}}{2a}
+				 = \\frac {${-bs}\\pm\\sqrt{${mathJaxStr.minus(bs * bs, 4)}\\times${as}\\times(${mathJaxStr.minus(cs, ds)})}}{2\\times${as}}
+				 = \\frac {${-bs}\\pm\\sqrt{${bs * bs - 4 * as * (cs - ds)}}}{${2 * as}}
+				${(Math.sqrt(bs * bs - 4 * as * (cs - ds)) % 1 == 0 ?
+						` = ${mathJaxStr.frac(-bs + Math.sqrt(bs * bs - 4 * as * (cs - ds)), 2 * as)}, ${mathJaxStr.frac(-bs - Math.sqrt(bs * bs - 4 * as * (cs - ds)), 2 * as)}` :
+						"")}$<br>
+				と求められる。`
+				document.querySelector('#ans')!!.classList.add('show');
+				(window as any).MathJax.Hub.Typeset();
+			}
 		}
-		let as = Number(a.value);
-		let bs = Number(b.value);
-		let cs = Number(c.value);
-		document.querySelector('#ans')!!.innerHTML = `この問題の解は解の公式を使用し、
-		$$x=\\frac {${-bs}\\pm\\sqrt{${mathJaxStr.minus(bs * bs, 4 * as * cs)}}}{${2 * as}}$$と求められる。`
-		document.querySelector('#ans')!!.classList.add('show');
-		(window as any).MathJax.Hub.Typeset();
 	})
 })
 
@@ -153,5 +176,17 @@ const mathJaxStr = {
 	},
 	minus: (a: number | string, b: number | string) => {
 		return mathJaxStr.plus(a, -b);
+	},
+	plus_minus: (a: number, b: number) => {
+		if (b % 1 == 0) {
+			return `${a + b}, ${a - b}`
+		}
+		return `${a}\\pm${b}`;
+	},
+	frac: (a: number, b: number) => {
+		if (a % b == 0) {
+			return (a / b).toString();
+		}
+		return `\\frac {${a}}{${b}}`
 	}
 }
