@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "cd ./server && tsc && cd ../web && node ../server/dist/test",
+		"preinstall": "npm i -g typescript",
     "start": "cd web && npm i && cd ../server && npm i && cd ../web && node ../server/dist"
   },
   "author": "",
