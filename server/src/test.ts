@@ -5,10 +5,10 @@ import fs from "fs";
 import mime from "mime";
 import chokidar from "chokidar";
 
-child_process.execSync(`node ${Path.join(process.argv[1], '../')}`);
+child_process.exec(`node ${Path.join(process.argv[1], '../')}`);
 
 chokidar.watch('./html').on('all', () => {
-	child_process.execSync(`node ${Path.join(process.argv[1], '../')}`);
+	child_process.exec(`node ${Path.join(process.argv[1], '../')}`);
 	console.log("Folder changed");
 })
 

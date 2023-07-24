@@ -62,36 +62,24 @@ document.addEventListener('DOMContentLoaded', () => {
 					}
 				}
 			}
-
-			// 存在しなかったとき
-			{
-				let as = Number(a.value);
-				let bs = Number(b.value);
-				let cs = Number(c.value);
-				document.querySelector('#ans')!!.innerHTML = `この問題の解は解の公式を使用し、
-				$$x= \\frac {-b\\pm\\sqrt{b^{2}+4ac}}{2a}=\\frac {${-bs}\\pm\\sqrt{${mathJaxStr.minus(bs * bs, 4)}\\times${as}\\times${cs}}}{${2 * as}}$$
-				と求められる。`
-				document.querySelector('#ans')!!.classList.add('show');
-				(window as any).MathJax.Hub.Typeset();
-			}
-		} else {
-			{
-				let as = Number(a.value);
-				let bs = Number(b.value);
-				let cs = Number(c.value);
-				let ds = Number(d.value);
-				document.querySelector('#ans')!!.innerHTML = `$$ax^2+bx+c=d \\Rightarrow ax^2+bx+(c-d)=0$$
-				解の公式を使用し、<br>
-				$x= \\frac {-b\\pm\\sqrt{b^{2}+4a(c-d)}}{2a}
-				 = \\frac {${-bs}\\pm\\sqrt{${mathJaxStr.minus(bs * bs, 4)}\\times${as}\\times(${mathJaxStr.minus(cs, ds)})}}{2\\times${as}}
-				 = \\frac {${-bs}\\pm\\sqrt{${bs * bs - 4 * as * (cs - ds)}}}{${2 * as}}
-				${(Math.sqrt(bs * bs - 4 * as * (cs - ds)) % 1 == 0 ?
-						` = ${mathJaxStr.frac(-bs + Math.sqrt(bs * bs - 4 * as * (cs - ds)), 2 * as)}, ${mathJaxStr.frac(-bs - Math.sqrt(bs * bs - 4 * as * (cs - ds)), 2 * as)}` :
-						"")}$<br>
-				と求められる。`
-				document.querySelector('#ans')!!.classList.add('show');
-				(window as any).MathJax.Hub.Typeset();
-			}
+		}
+		{
+			let as = Number(a.value);
+			let bs = Number(b.value);
+			let cs = Number(c.value);
+			let ds = Number(d.value);
+			document.querySelector('#ans')!!.innerHTML = `${ds == 0 ? "" : `$$ax^2+bx+c=d \\Rightarrow ax^2+bx+(c-d)=0$$`}
+			解の公式を使用し、<br>
+			$$x= \\frac {-b\\pm\\sqrt{b^{2}+4a${ds == 0 ? "c" : "(c-d)"}}}{2a}
+			 = \\frac {${-bs}\\pm\\sqrt{${mathJaxStr.minus(bs * bs, 4)}\\times${as}\\times(${mathJaxStr.minus(cs, ds)})}}{2\\times${as}}
+			 = \\frac {${-bs}\\pm${mathJaxStr.sqrt(bs * bs - 4 * as * (cs - ds))}}{${2 * as}}
+			${(Math.sqrt(bs * bs - 4 * as * (cs - ds)) % 1 == 0 ?
+					` = ${mathJaxStr.frac(-bs + Math.sqrt(bs * bs - 4 * as * (cs - ds)), 2 * as)}, ${mathJaxStr.frac(-bs - Math.sqrt(bs * bs - 4 * as * (cs - ds)), 2 * as)}` :
+					"")}$$<br>
+			と求められる。`
+			console.log(mathJaxStr.sqrt(bs * bs - 4 * as * (cs - ds)));
+			document.querySelector('#ans')!!.classList.add('show');
+			(window as any).MathJax.Hub.Typeset();
 		}
 	})
 })
@@ -122,8 +110,12 @@ function isPrime(value: number) {
 }
 
 function prime_factorization(value: number) {
-	if (isPrime(value)) return [value];
 	let vec: number[] = [];
+	if (value < 0) {
+		value = -value;
+		vec.push(-1);
+	}
+	if (isPrime(value)) return [value];
 	while (!isPrime(value)) {
 		for (let i = 2; i < value; i++) {
 			if (isPrime(i)) {
@@ -188,5 +180,37 @@ const mathJaxStr = {
 			return (a / b).toString();
 		}
 		return `\\frac {${a}}{${b}}`
+	},
+	sqrt: (a: number) => {
+		const data = sqrtOut(a);
+		const i = data[1] < 0;
+		if (i) {
+			data[1] = -data[1];
+		}
+		if (data[0] == 1) {
+			return `${i ? "i" : ""}\\sqrt{${data[1]}}`;
+		}
+		return `${data[0]}${i ? "i" : ""}\\sqrt{${data[1]}}`;
 	}
+}
+
+function sqrtOut(a: number): [number, number] {
+	let map: { [key: number]: number } = {};
+	prime_factorization(a).forEach((value) => {
+		if (!map[value]) map[value] = 0;
+		map[value]++;
+	})
+	// ルート外に出せる、出せない
+	let c = 1, d = 1;
+	for (const v in map) {
+		const key = Number(v);
+		if (map[key] % 2 == 1) {
+			c *= Math.pow(key, (map[key] - 1) / 2);
+			d *= key;
+		}
+		else {
+			c *= Math.pow(key, map[key] / 2);
+		}
+	}
+	return [c, d];
 }
